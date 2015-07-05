@@ -5,13 +5,11 @@
 
 const p5 = require('p5');
 const $ = require('jquery');
-const Graph = require('./Graph');
+const Graph = require('./Harmonigraph');
 
 let graph;
 
 function mySketch(s) {
-
-  
 
   s.setup = function() {
 

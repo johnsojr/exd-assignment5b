@@ -2,13 +2,12 @@
 
 Doing
 -----
+* Create Harmonigraph class: Takes a graph, and makes is sound pretty.
 
 
 To Do
 -----
-* Create Harmonigraph class
-  - Takes a graph, and makes is sound pretty.
-  - When clicked, makes sound corresponding to height on screen. "Play Mode"
+* When clicked, makes sound corresponding to height on screen. "Play Mode"
 
 * Song follows direction of graph
 
