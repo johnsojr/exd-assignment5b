@@ -50,6 +50,10 @@ class Graph {
     return v;
   }
 
+  removeVertex(vertexToRemove) {
+    _.remove(this.vertices, v => v === vertexToRemove);
+  }
+
   addArc(tailVertex, headVertex) {
     let arc = new Arc({ tail: tailVertex, head: headVertex, sketch: this.sketch });
     this.arcs.push(arc);
@@ -65,12 +69,9 @@ class Graph {
   }
 
   setActionMode(mode) {
-    console.log('setting action mode');
 
     this.actionMode = mode;
     let $canvas = $(this.sketch.canvas);
-    console.log(this.sketch);
-    console.log($canvas);
 
     // remove event handlers from other actions
     let actionList = [
@@ -85,15 +86,12 @@ class Graph {
     if ( mode === MOVE_VERTEX_MODE) {
       $canvas.on('mousedown.graph.moveVertex',(e) => {
         e.preventDefault();
-
-        console.log('mousedown');
         _.filter(this.vertices, v => v.hasMouseOver())
          .forEach(v => v.isMoving = true);
       });
 
       $canvas.on('mouseup.graph.moveVertex', (e) => {
         e.preventDefault();
-        console.log('mouseup');
         this.vertices.forEach(v => v.isMoving = false);
       });
     }
@@ -101,7 +99,6 @@ class Graph {
     // Vertex Drawing
     if (mode === DRAW_VERTEX_MODE) {
       $canvas.on('click.graph.addVertex',(e) => {
-        console.log('click!');
         e.preventDefault();
         this.addVertex({
           x: this.sketch.mouseX,
@@ -113,9 +110,10 @@ class Graph {
     // Delete Mode
     if (mode === DELETE_MODE) {
       $canvas.on('click.graph.delete',(e) => {
-        console.log('click!');
         e.preventDefault();
-        _.remove(this.vertices, v => v.hasMouseOver());
+
+        let vertexToRemove = _.find(this.vertices, v => v.hasMouseOver());
+        this.removeVertex(vertexToRemove);
       });
     }
 
@@ -133,10 +131,8 @@ class Graph {
 
     let modeIndex = _.findIndex(modes, mode => mode === this.actionMode);
 
-    console.log('action mode index:' + modeIndex);
-
     let nextMode = modes[ (modeIndex + 1) % modes.length];
-    
+
     this.setActionMode(nextMode);
 
   }
@@ -145,7 +141,6 @@ class Graph {
   render() {
 
     let s = this.sketch;
-
 
     // show drawing mode
     if (this.displayActionMode) {

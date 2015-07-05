@@ -53,7 +53,6 @@ function mySketch(s) {
     let key = s.key.toUpperCase();
 
     if (key === ' ') {
-      console.log('SPACE pressed');
       graph.cycleActionMode();
     }
 
