@@ -5,6 +5,9 @@
 'use strict';
 
 const _ = require('lodash');
+const Vertex = require('./Vertex');
+const Arc = require('./Arc');
+
 
 class Graph {
 
@@ -14,27 +17,39 @@ class Graph {
   constructor(config) {
     let defaults = {
       vertices: [],
-      arcs: [],
-      sketch: null
+      arcs: []
     };
 
     config = _.assign({}, defaults, config);
 
-    _.each(config, (value, key) => { // fat arrow this binding ftw!
+    _.each(config, (value, key) => {
       this[key] = value;
     });
   }
 
-  addVertex(x,y) {
-    let v = { x, y, radius: 10};
+  addVertex(config) {
+    let v = new Vertex(config);
     this.vertices.push(v);
     return v;
   }
 
-  addArc(tail, head) {
-    let arc = { tail, head };
+  addArc(tailVertex, headVertex) {
+    let arc = new Arc({ tail: tailVertex, head: headVertex });
     this.arcs.push(arc);
     return arc;
+  }
+
+  render(sketch) {
+
+    // draw the vertices
+    _.forEach(this.vertices, (vertex) => {
+      vertex.render(sketch);
+    });
+
+    // draw the arcs
+    _.forEach(this.arcs, (arc) => {
+      arc.render(sketch);
+    });
   }
 
 }

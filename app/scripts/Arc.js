@@ -14,7 +14,7 @@ class Arc {
   constructor(config) {
     let defaults = {
       tail: null,
-      head: null
+      head: null,
     };
 
     config = _.assign({}, defaults, config);
@@ -24,11 +24,9 @@ class Arc {
     });
   }
 
-  setSketch(sketch) {
-    this.sketch = sketch;
+  render(sketch) {
+    //let s = sketch;
   }
-
-  render() {}
 
 }
 

@@ -5,11 +5,11 @@
 
 const p5 = require('p5');
 const $ = require('jquery');
-const Graph = require('Graph');
+const Graph = require('./Graph');
 
+let graph = new Graph();
 
 function mySketch(s) {
-
 
   s.setup = function() {
 
@@ -20,6 +20,9 @@ function mySketch(s) {
       $canvasWrapper.innerWidth(),
       $canvasWrapper.innerHeight()
     ).parent($canvasWrapper[0]);
+
+    graph.addVertex({ x: s.width/2, y: s.height/2 });
+    graph.render(s);
 
   };
 

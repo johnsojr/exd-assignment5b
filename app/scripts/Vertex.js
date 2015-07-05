@@ -13,21 +13,24 @@ class Vertex {
       y: 0,
       radius: 10,
       color: [100,100,100,100],
-      sketch: null,
     };
 
     config = _.assign({}, defaults, config);
 
-    _.each(config, (value, key) => { // fat arrow this binding ftw!
+    _.each(config, (value, key) => {
       this[key] = value;
     });
   }
 
-  setSketch(sketch) {
-    this.sketch = sketch;
-  }
+  render(sketch) {
+    let s = sketch;
 
-  render() {}
+    s.push();
+    s.ellipseMode(s.RADIUS);
+    s.fill(this.color);
+    s.ellipse(this.x, this.y, this.radius, this.radius);
+    s.pop();
+  }
 
 }
 
