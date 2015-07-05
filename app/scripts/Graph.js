@@ -52,6 +52,10 @@ class Graph {
 
   removeVertex(vertexToRemove) {
     _.remove(this.vertices, v => v === vertexToRemove);
+
+    _.remove(this.arcs, (arc) => {
+      return arc.tail === vertexToRemove || arc.head === vertexToRemove;
+    });
   }
 
   addArc(config) {
@@ -77,9 +81,11 @@ class Graph {
     // remove event handlers from other actions
     let actionList = [
       'click.graph.addVertex',
+      'click.graph.drawArc',
       'click.graph.delete',
       'mousedown.graph.moveVertex',
       'mouseup.graph.moveVertex',
+
     ];
     $canvas.off(actionList.join(' '));
 
@@ -126,7 +132,6 @@ class Graph {
       
       $canvas.on('click.graph.drawArc', (e) => {
         e.preventDefault();
-        console.log('clicked');
 
         let vertexClicked = _.find(this.vertices, v => v.hasMouseOver());
 
@@ -145,8 +150,6 @@ class Graph {
         else {
           drawingArc = this.addArc({tail: vertexClicked});
         }
-
-
 
       });
     }
