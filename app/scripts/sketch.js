@@ -23,17 +23,34 @@ function mySketch(s) {
 
     graph = new Graph({sketch: s});
 
-    graph.addVertex({
+    let v1 = graph.addVertex({
       x: s.width/2,
       y: s.height/2
     });
 
+    let v2 = graph.addVertex({
+      x: s.width/2 - 100,
+      y: s.width/2 - 100
+    });
+
+    let v3 = graph.addVertex({
+      x: s.width/2 + 100,
+      y: s.width/2 - 100
+    });
+
+    graph.addArc({tail: v1, head: v2});
+    graph.addArc({tail: v2, head: v3});
+    graph.addArc({tail: v3, head: v1});
+
     graph.render();
+
+    s.frameRate(1);
 
   };
 
   s.draw = function() {
     s.clear();
+    graph.update();
     graph.render();
   };
 
