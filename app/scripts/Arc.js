@@ -15,6 +15,7 @@ class Arc {
     let defaults = {
       tail: null,
       head: null,
+      sketch: null
     };
 
     config = _.assign({}, defaults, config);
@@ -24,7 +25,7 @@ class Arc {
     });
   }
 
-  render(sketch) {
+  render() {
     //let s = sketch;
   }
 

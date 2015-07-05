@@ -21,12 +21,16 @@ function mySketch(s) {
       $canvasWrapper.innerHeight()
     ).parent($canvasWrapper[0]);
 
-    graph.addVertex({ x: s.width/2, y: s.height/2 });
-    graph.render(s);
+    let v = graph.addVertex({ x: s.width/2, y: s.height/2, sketch: s });
+
+
+    graph.render();
 
   };
 
   s.draw = function() {
+    s.clear();
+    graph.render();
 
   };
 
