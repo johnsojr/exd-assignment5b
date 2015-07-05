@@ -1,10 +1,18 @@
-# TO Do
+# To Do List
 
-1. Add arrow heads to arcs
+Doing
+-----
 
-2. Create Harmonigraph class
+
+To Do
+-----
+* Create Harmonigraph class
   - Takes a graph, and makes is sound pretty.
   - When clicked, makes sound corresponding to height on screen. "Play Mode"
 
-3. Song follows direction of graph
+* Song follows direction of graph
 
+Done
+----
+* add arrow head
+* Fix Bug: cancel arc drawing if mode changed before complete.

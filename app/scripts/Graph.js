@@ -89,6 +89,9 @@ class Graph {
     ];
     $canvas.off(actionList.join(' '));
 
+    // Cancel any Arcs that started, but didn't complete
+    _.remove(this.arcs, arc => arc.head === null );
+
     // Moving Mode
     if ( mode === MOVE_VERTEX_MODE) {
       $canvas.on('mousedown.graph.moveVertex',(e) => {

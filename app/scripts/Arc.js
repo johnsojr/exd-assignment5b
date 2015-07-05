@@ -51,11 +51,25 @@ class Arc {
     }
 
     s.push();
-    if (!this.head) {
-      s.line(this.tail.x, this.tail.y, s.mouseX, s.mouseY);
-    } else {
-      s.line(this.tail.x, this.tail.y, this.head.x, this.head.y);
-    }
+    s.translate(this.tail.x, this.tail.y);
+
+    let arcHead = this.head || {x: s.mouseX, y: s.mouseY };
+
+    // draw it straight down then rotate
+    // to make arrowhead drawing cleaner
+    let dy = arcHead.y - this.tail.y;
+    let dx = arcHead.x - this.tail.x;
+    let arcLength = Math.sqrt(dy*dy + dx*dx);
+    s.rotate(Math.PI/2 - Math.atan2(dy, -dx));
+    s.line(0,0,0,arcLength);
+
+    // create arrowhead
+    s.push();
+    s.translate(0, arcLength);
+    s.line(0,0, -6, -10);
+    s.line(0,0, 6, -10);
+    s.pop();
+
     s.pop();
   
 
