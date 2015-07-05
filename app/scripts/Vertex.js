@@ -26,22 +26,30 @@ class Vertex {
       this[key] = value;
     });
 
+    if (!this.sketch) {
+      throw(`Vertex ${this} has no p5JS sketch is set for rendering`);
+    }
+
     this._setupMoveOnDrag();
 
   }
 
   _setupMoveOnDrag() {
     if (this.moveOnDrag) {
-      this.sketch.canvas.addEventListener('mousedown', () => {
-        console.log('down');
+
+      // toggle _isMoving when mouse is down 
+      this.sketch.canvas.addEventListener('mousedown', (e) => {
+        e.preventDefault();
+
         if (this.hasMouseOver()) {
-          console.log('moving!');
           this._isMoving = true;
         }
       });
-      this.sketch.canvas.addEventListener('mouseup', () => {
+
+      // stop moving upon release
+      this.sketch.canvas.addEventListener('mouseup', (e) => {
+        e.preventDefault();
         if (this.hasMouseOver()) {
-          console.log('stopping');
           this._isMoving = false;
         }
       });

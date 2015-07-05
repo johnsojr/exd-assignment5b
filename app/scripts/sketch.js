@@ -7,9 +7,11 @@ const p5 = require('p5');
 const $ = require('jquery');
 const Graph = require('./Graph');
 
-let graph = new Graph();
+let graph;
 
 function mySketch(s) {
+
+  graph = new Graph({sketch: s});
 
   s.setup = function() {
 
@@ -21,8 +23,10 @@ function mySketch(s) {
       $canvasWrapper.innerHeight()
     ).parent($canvasWrapper[0]);
 
-    let v = graph.addVertex({ x: s.width/2, y: s.height/2, sketch: s });
-
+    graph.addVertex({
+      x: s.width/2,
+      y: s.height/2
+    });
 
     graph.render();
 
@@ -42,6 +46,16 @@ function mySketch(s) {
 
     // put in canvasWrapper
     s.resizeCanvas(w,h-3);
+  };
+
+  s.mouseClicked = function() {
+    if (! graph.hasMouseOverVertex()) {
+      console.log('new Vertex created!');
+      graph.addVertex({
+        x: s.mouseX,
+        y: s.mouseY
+      });
+    }
   };
 
 }
