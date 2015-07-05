@@ -52,6 +52,11 @@ function mySketch(s) {
   s.keyTyped = function() {
     let key = s.key.toUpperCase();
 
+    if (key === ' ') {
+      console.log('SPACE pressed');
+      graph.cycleActionMode();
+    }
+
     // activate Vertex Drawing Mode
     if (key === 'V') {
       graph.setActionMode('DRAW_VERTEX');
@@ -65,6 +70,10 @@ function mySketch(s) {
     // Move Mode
     if (key === 'M') {
       graph.setActionMode('MOVE_VERTEX');
+    }
+
+    if (key === 'X') {
+      graph.setActionMode('DELETE');
     }
 
     // prevent browser defaults

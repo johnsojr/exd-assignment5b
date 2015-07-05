@@ -12,6 +12,7 @@ const Arc = require('./Arc');
 const DRAW_VERTEX_MODE = 'DRAW_VERTEX';
 const DRAW_ARC_MODE = 'DRAW_ARC';
 const MOVE_VERTEX_MODE = 'MOVE_VERTEX';
+const DELETE_MODE = 'DELETE';
 
 class Graph {
 
@@ -74,8 +75,9 @@ class Graph {
     // remove event handlers from other actions
     let actionList = [
       'click.graph.addVertex',
+      'click.graph.delete',
       'mousedown.graph.moveVertex',
-      'mouseup.graph.moveVertex'
+      'mouseup.graph.moveVertex',
     ];
     $canvas.off(actionList.join(' '));
 
@@ -108,8 +110,35 @@ class Graph {
       });
     }
 
+    // Delete Mode
+    if (mode === DELETE_MODE) {
+      $canvas.on('click.graph.delete',(e) => {
+        console.log('click!');
+        e.preventDefault();
+        _.remove(this.vertices, v => v.hasMouseOver());
+      });
+    }
+
     // Arc Drawing
     if (mode === DRAW_ARC_MODE) {}
+  }
+
+  cycleActionMode() {
+    let modes = [
+      DRAW_VERTEX_MODE,
+      DRAW_ARC_MODE,
+      MOVE_VERTEX_MODE,
+      DELETE_MODE
+    ];
+
+    let modeIndex = _.findIndex(modes, mode => mode === this.actionMode);
+
+    console.log('action mode index:' + modeIndex);
+
+    let nextMode = modes[ (modeIndex + 1) % modes.length];
+    
+    this.setActionMode(nextMode);
+
   }
 
 
