@@ -130,13 +130,13 @@ class Graph {
 
     // if mode exists, add functions
     if (mode) {
-      this.mode.on.push(onFn);
-      this.mode.off.push(offFn);
+      mode.on.push(onFn);
+      mode.off.push(offFn);
     }
 
     // otherwise create a new entry in mode list
     else {
-      this.mode.push({
+      this.modes.push({
         id: modeName,
         on: [onFn],
         off: [offFn],
@@ -150,6 +150,25 @@ class Graph {
   **/
   getCurrentMode() {
     return this.getMode(this.currentMode);
+  }
+
+  /**
+  * turns off all handlers for modeID. Then,
+  * clears the on/off handlers array.
+  * use this when you plan to override the default
+  * handlers with your own handler.
+  **/
+  clearMode(modeID) {
+
+    // deregister event handlers for modeID
+    let mode = this.getMode(modeID);
+    mode.off.forEach((fn) => {
+      return fn.bind(this)();
+    });
+
+    // clear eventHandler arrays
+    mode.on = [];
+    mode.off =[];
   }
 
 
@@ -263,7 +282,7 @@ class Graph {
       this.removeVertex(vertexToRemove);
     });
   }
-  
+
   _offDeleteVertexMode() {
     this.$canvas.off('click.graph.delete');
   }

@@ -32,11 +32,61 @@ class Harmonigraph {
       this.graph = new Graph({sketch: this.sketch});
     }
 
-    // // add 'PLAY' to graphs action mode list
-    // this.graph.addActionMode('PLAY_MODE');
+    // register play mode
+    this.graph.addMode('playSound', this._onPlayMode.bind(this), this._offPlayMode.bind(this));
 
-    // // initialize action mode
-    // this.setActionMode(this.actionMode);
+    // deregister default vertex draw mode
+    this.graph.clearMode('drawVertex');
+
+    // register new vertex drawing handlers
+    this.graph.addMode('drawVertex', this._onDrawVertexMode.bind(this), this._offDrawVertexMode.bind(this));
+
+    // reset vertex drawing handlers
+    this.graph.setCurrentMode('drawVertex');
+  }
+
+
+  /**
+  * Register an oscillator with the vertex
+  **/
+  _onDrawVertexMode() {
+    this.$canvas.on('click.harmonigraph.drawVertex', (e) => {
+      e.preventDefault();
+      this.addVertex({
+        x: this.sketch.mouseX,
+        y: this.sketch.mouseY
+      });
+    });
+  }
+
+  _offDrawVertexMode() {
+    this.$canvas.off('click.harmonigraph.drawVertex');
+  }
+
+  _onPlayMode() {
+    this.$canvas.on('click.harmonigraph.play', (e) => {
+      e.preventDefault();
+
+      // play a sound for any vertex clicked
+      _.filter(this.graph.vertices, vertex => vertex.hasMouseOver())
+        .forEach((vertex) => {
+          console.log(vertex);
+
+          if (!vertex._isPlaying){
+            vertex.color = [0,0,255,100];
+            vertex._isPlaying = true;
+            vertex.osc.amp(0.25, 0.05);
+          } else {
+            vertex.color = vertex._defaultColor;
+            vertex._isPlaying = false;
+            vertex.osc.amp(0, 0.5);
+          }
+        });
+    });
+  }
+
+  _offPlayMode() {
+    this.$canvas.off('click.harmonigraph.play');
   }
 
   nextMode() {
