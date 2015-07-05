@@ -1,6 +1,7 @@
 'use strict';
 
 const _ = require('lodash');
+const $ = require('jquery');
 
 class Vertex {
 
@@ -34,11 +35,22 @@ class Vertex {
 
   }
 
+  setMoveOnDrag(bool) {
+    // remove event handlers
+    $(this.sketch.canvas).off('mousedown.vertex.drag mouseup.vertex.drag');
+
+    this.moveOnDrag = bool;
+
+    if (this.moveOnDrag) {
+      this._setupMoveOnDrag();
+    }
+  }
+
   _setupMoveOnDrag() {
     if (this.moveOnDrag) {
 
       // toggle _isMoving when mouse is down 
-      this.sketch.canvas.addEventListener('mousedown', (e) => {
+      $(this.sketch.canvas).on('mousedown.vertex.drag', (e) => {
         e.preventDefault();
 
         if (this.hasMouseOver()) {
@@ -47,7 +59,7 @@ class Vertex {
       });
 
       // stop moving upon release
-      this.sketch.canvas.addEventListener('mouseup', (e) => {
+      $(this.sketch.canvas).on('mouseup.vertex.drag', (e) => {
         e.preventDefault();
         if (this.hasMouseOver()) {
           this._isMoving = false;
