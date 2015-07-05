@@ -1,7 +1,7 @@
 'use strict';
 
 const _ = require('lodash');
-const $ = require('jquery');
+// const $ = require('jquery');
 
 class Vertex {
 
@@ -15,10 +15,8 @@ class Vertex {
       radius: 10,
       color: [100,100,100,100],
       activeColor: [255,0,0],
-      clickHandlers: [],
       sketch: null,
-      _isMoving: false,
-      moveOnDrag: true
+      isMoving: false,
     };
 
     config = _.assign({}, defaults, config);
@@ -31,41 +29,6 @@ class Vertex {
       throw(`Vertex ${this} has no p5JS sketch is set for rendering`);
     }
 
-    this._setupMoveOnDrag();
-
-  }
-
-  setMoveOnDrag(bool) {
-    // remove event handlers
-    $(this.sketch.canvas).off('mousedown.vertex.drag mouseup.vertex.drag');
-
-    this.moveOnDrag = bool;
-
-    if (this.moveOnDrag) {
-      this._setupMoveOnDrag();
-    }
-  }
-
-  _setupMoveOnDrag() {
-    if (this.moveOnDrag) {
-
-      // toggle _isMoving when mouse is down 
-      $(this.sketch.canvas).on('mousedown.vertex.drag', (e) => {
-        e.preventDefault();
-
-        if (this.hasMouseOver()) {
-          this._isMoving = true;
-        }
-      });
-
-      // stop moving upon release
-      $(this.sketch.canvas).on('mouseup.vertex.drag', (e) => {
-        e.preventDefault();
-        if (this.hasMouseOver()) {
-          this._isMoving = false;
-        }
-      });
-    }
   }
 
   hasMouseOver() {
@@ -98,7 +61,7 @@ class Vertex {
     s.fill(this.color);
 
     // is this being dragged?
-    if (this._isMoving) {
+    if (this.isMoving) {
       this.moveTo(s.mouseX, s.mouseY);
       s.fill(this.activeColor);
     }

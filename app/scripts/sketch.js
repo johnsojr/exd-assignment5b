@@ -11,7 +11,7 @@ let graph;
 
 function mySketch(s) {
 
-  graph = new Graph({sketch: s});
+  
 
   s.setup = function() {
 
@@ -22,6 +22,8 @@ function mySketch(s) {
       $canvasWrapper.innerWidth(),
       $canvasWrapper.innerHeight()
     ).parent($canvasWrapper[0]);
+
+    graph = new Graph({sketch: s});
 
     graph.addVertex({
       x: s.width/2,
@@ -35,7 +37,6 @@ function mySketch(s) {
   s.draw = function() {
     s.clear();
     graph.render();
-
   };
 
   s.windowResized = function() {
@@ -48,14 +49,26 @@ function mySketch(s) {
     s.resizeCanvas(w,h-3);
   };
 
-  s.mouseClicked = function() {
-    if (! graph.hasMouseOverVertex()) {
-      console.log('new Vertex created!');
-      graph.addVertex({
-        x: s.mouseX,
-        y: s.mouseY
-      });
+  s.keyTyped = function() {
+    let key = s.key.toUpperCase();
+
+    // activate Vertex Drawing Mode
+    if (key === 'V') {
+      graph.setActionMode('DRAW_VERTEX');
     }
+
+    // Edge Drawing Mode
+    if (key === 'E' || key === 'A') {
+      graph.setActionMode('DRAW_ARC');
+    }
+
+    // Move Mode
+    if (key === 'M') {
+      graph.setActionMode('MOVE_VERTEX');
+    }
+
+    // prevent browser defaults
+    return false; 
   };
 
 }
