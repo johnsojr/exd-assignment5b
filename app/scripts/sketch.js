@@ -51,7 +51,7 @@ function mySketch(s) {
     let key = s.key.toUpperCase();
 
     if (key === ' ') {
-      graph.cycleActionMode();
+      graph.nextMode();
     }
 
     // activate Vertex Drawing Mode

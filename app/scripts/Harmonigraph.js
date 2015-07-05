@@ -39,8 +39,8 @@ class Harmonigraph {
     // this.setActionMode(this.actionMode);
   }
 
-  cycleActionMode() {
-    this.graph.cycleActionMode();
+  nextMode() {
+    this.graph.nextMode();
   }
 
   addVertex(config) {
