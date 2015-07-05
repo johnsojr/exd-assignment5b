@@ -54,8 +54,9 @@ class Graph {
     _.remove(this.vertices, v => v === vertexToRemove);
   }
 
-  addArc(tailVertex, headVertex) {
-    let arc = new Arc({ tail: tailVertex, head: headVertex, sketch: this.sketch });
+  addArc(config) {
+    config.sketch = this.sketch;
+    let arc = new Arc(config);
     this.arcs.push(arc);
     return arc;
   }
@@ -118,7 +119,37 @@ class Graph {
     }
 
     // Arc Drawing
-    if (mode === DRAW_ARC_MODE) {}
+    if (mode === DRAW_ARC_MODE) {
+      
+      // are we currently drawing an arc?
+      let drawingArc = null;
+      
+      $canvas.on('click.graph.drawArc', (e) => {
+        e.preventDefault();
+        console.log('clicked');
+
+        let vertexClicked = _.find(this.vertices, v => v.hasMouseOver());
+
+        if (!vertexClicked) {
+          return;
+        }
+
+        // if we're already drawing an arc, finish it 
+        if (drawingArc) {
+          drawingArc.setHead(vertexClicked);
+          drawingArc = null;
+        }
+
+        // if we haven't started a new arc,
+        // this this vertex create a new arc
+        else {
+          drawingArc = this.addArc({tail: vertexClicked});
+        }
+
+
+
+      });
+    }
   }
 
   cycleActionMode() {
