@@ -5,12 +5,8 @@
 
 const p5 = require('p5');
 const $ = require('jquery');
-const _ = require('lodash');
+const Graph = require('Graph');
 
-const Track = require('./track');
-
-let tracks = [];
-let sound, osc;
 
 function mySketch(s) {
 
@@ -25,24 +21,10 @@ function mySketch(s) {
       $canvasWrapper.innerHeight()
     ).parent($canvasWrapper[0]);
 
-    // create a new track
-    let conf = {
-      sketch: s,
-      sound: sound
-    };
-
-    let t = new Track(conf);
-    tracks.push(t);
-    console.log(tracks);
-
   };
 
   s.draw = function() {
-    s.clear();
-    _.each(tracks, function(track) {
-      track.update();
-      track.render();
-    });
+
   };
 
   s.windowResized = function() {
