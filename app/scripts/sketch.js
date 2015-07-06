@@ -5,11 +5,25 @@
 
 const p5 = require('p5');
 const $ = require('jquery');
+const _ = require('lodash');
 const Graph = require('./Harmonigraph');
+const NOTE_FREQ = require('./noteFreq');
 
 let graph;
 
 function mySketch(s) {
+
+  function drawBackground() {
+    for (let hue = 0; hue <= 255; hue++){
+      s.push();
+      s.colorMode(s.HSB);
+      s.noStroke();
+      s.fill([hue,100,100]);
+      s.translate(0, hue/256 * s.height);
+      s.rect(0,0,s.width, 1/256 * s.height);
+      s.pop();
+    }
+  }
 
   s.setup = function() {
 
@@ -21,26 +35,37 @@ function mySketch(s) {
       $canvasWrapper.innerHeight()
     ).parent($canvasWrapper[0]);
 
+    drawBackground();
+
     graph = new Graph({sketch: s});
+    // make global
+    window.graph = graph;
 
-    let v1 = graph.addVertex({
-      x: s.width/2,
-      y: s.height/2
+    let randomFrequencies = [];
+    for (let i=0; i < 8; i++) {
+      let randomIdx = _.random(0,NOTE_FREQ.length);
+      randomFrequencies.push(NOTE_FREQ[randomIdx]);
+    }
+
+    // create initial vertices from
+    // random frequencies
+    let initialNotes = [];
+    randomFrequencies.forEach((freq) => {
+      let v = graph.addVertex({
+        x: _.random(10,s.width - 10),
+        y: s.map(freq,0,880,100,s.height - 100)
+      });
+      initialNotes.push(v);
     });
 
-    let v2 = graph.addVertex({
-      x: s.width/2 - 100,
-      y: s.width/2 - 100
+    // create initial arcs
+    initialNotes.forEach((note, index) => {
+      let headIndex = (index + 1) % initialNotes.length;
+      graph.addArc({
+        tail: note,
+        head: initialNotes[headIndex]
+      });
     });
-
-    let v3 = graph.addVertex({
-      x: s.width/2 + 200,
-      y: s.width/2 - 200
-    });
-
-    graph.addArc({tail: v1, head: v2});
-    graph.addArc({tail: v2, head: v3});
-    graph.addArc({tail: v3, head: v1});
 
     graph.render();
 
@@ -50,6 +75,7 @@ function mySketch(s) {
 
   s.draw = function() {
     s.clear();
+    drawBackground();
     graph.render();
   };
 

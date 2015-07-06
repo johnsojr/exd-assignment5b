@@ -18,7 +18,7 @@ class Harmonigraph {
       graph: null,
       sketch: null,
       beat: 0,
-      bpm: 60,
+      bpm: 120,
       activeVertices: [],
       inactiveVertices: [],
       defaultMode: 'playSound',
@@ -59,13 +59,17 @@ class Harmonigraph {
     this.graph.nextMode();
   }
 
+  setCurrentMode(modeID) {
+    return this.graph.setCurrentMode(modeID);
+  }
+
   addVertex(config) {
     let v = this.graph.addVertex(config);
 
     // add an oscillator to the vertex
     let osc = new p5.Oscillator();
     osc.setType('triangle');
-    osc.freq(v.y);
+    osc.freq(Math.log(v.y));
     osc.amp(0);
     osc.start();
     
@@ -100,9 +104,16 @@ class Harmonigraph {
     return _.includes(this.activeVertices, vertex);
   }
 
+  clearActive() {
+    this.activeVertices = [];
+    this.inactiveVertices = [];
+    _.forEach(this.graph.vertices, (vertex) => {
+      this.inactiveVertices.push(vertex);
+    });
+  }
+
   update() {
     // sets up next Vertices
-    console.log('updating');
     let nextActives = [];
 
     // first let's find all the vertices that will be
@@ -117,7 +128,7 @@ class Harmonigraph {
     this.inactiveVertices = _.difference(this.graph.vertices, nextActives);
 
     if (this.continuousUpdates) {
-      this._updateID = window.setTimeout(this.update.bind(this), this.bpm/60 * 1000);
+      this._updateID = window.setTimeout(this.update.bind(this), 60/this.bpm * 1000);
     }
   
 
@@ -125,7 +136,10 @@ class Harmonigraph {
 
   render() {
     _.forEach(this.activeVertices, (vertex) => {
-      vertex.osc.freq(vertex.y);
+      let s = this.sketch;
+      let freq = s.map(s.height - vertex.y, 0, s.height,0, 880);
+
+      vertex.osc.freq(freq);
       vertex.osc.amp(0.25);
       vertex.color = this.activeColor;
     });
