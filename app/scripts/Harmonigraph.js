@@ -2,6 +2,8 @@
 * Takes a graph and makes it sound pretty
 **/
 
+'use strict';
+
 const _ = require('lodash');
 const $ = require('jquery');
 const p5 = require('p5');
@@ -20,7 +22,9 @@ class Harmonigraph {
       activeVertices: [],
       inactiveVertices: [],
       defaultMode: 'playSound',
-      activeColor: [0,0,255,100]
+      activeColor: [0,0,255,100],
+      continuousUpdates: true,
+      _updateID: null,
     };
 
     config = _.assign({}, defaults, config);
@@ -48,6 +52,7 @@ class Harmonigraph {
 
     // reset vertex drawing handlers
     this.graph.setCurrentMode(this.defaultMode);
+    this.update();
   }
 
   nextMode() {
@@ -59,7 +64,7 @@ class Harmonigraph {
 
     // add an oscillator to the vertex
     let osc = new p5.Oscillator();
-    osc.setType('sine');
+    osc.setType('triangle');
     osc.freq(v.y);
     osc.amp(0);
     osc.start();
@@ -97,6 +102,7 @@ class Harmonigraph {
 
   update() {
     // sets up next Vertices
+    console.log('updating');
     let nextActives = [];
 
     // first let's find all the vertices that will be
@@ -110,23 +116,22 @@ class Harmonigraph {
     // find inactives
     this.inactiveVertices = _.difference(this.graph.vertices, nextActives);
 
+    if (this.continuousUpdates) {
+      this._updateID = window.setTimeout(this.update.bind(this), this.bpm/60 * 1000);
+    }
+  
+
   }
 
   render() {
-
-    console.log(`actives: ${this.activeVertices}`);
     _.forEach(this.activeVertices, (vertex) => {
-      // update pitch based on position
-
       vertex.osc.freq(vertex.y);
-      vertex.osc.amp(0.25,0.1);
+      vertex.osc.amp(0.25);
       vertex.color = this.activeColor;
     });
-
-    console.log(`inactives: ${this.inactiveVertices}`);
     _.forEach(this.inactiveVertices, (vertex) =>{
       vertex.osc.freq(vertex.y);
-      vertex.osc.amp(0,0.25);
+      vertex.osc.amp(0);
       vertex.color = vertex._defaultColor;
     });
 

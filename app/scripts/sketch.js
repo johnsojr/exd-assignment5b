@@ -34,8 +34,8 @@ function mySketch(s) {
     });
 
     let v3 = graph.addVertex({
-      x: s.width/2 + 100,
-      y: s.width/2 - 100
+      x: s.width/2 + 200,
+      y: s.width/2 - 200
     });
 
     graph.addArc({tail: v1, head: v2});
@@ -44,13 +44,12 @@ function mySketch(s) {
 
     graph.render();
 
-    s.frameRate(1);
+    s.frameRate(30);
 
   };
 
   s.draw = function() {
     s.clear();
-    graph.update();
     graph.render();
   };
 
